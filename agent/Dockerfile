@@ -10,7 +10,6 @@ ENV WOODPECKER_HEALTHCHECK_ADDR=creature-swift-agent.internal:3000
 ENV WOODPECKER_MAX_WORKFLOWS=2
 
 ENV WOODPECKER_BACKEND=local
-#ENV WOODPECKER_DOCKER_CONFIG=/home/user/.docker/config.json
 
 RUN apk add --no-cache git git-lfs bash curl
 
