@@ -21,4 +21,5 @@ Chose wisely, as they would become memorable for their task
 - [] creature-**puffin** - [pic](https://unsplash.com/photos/a-group-of-birds-sitting-on-top-of-a-rock-3fyg-0doexQ) and [video](https://www.youtube.com/watch?v=Dkclu1Cih3Y)
 - [] creature-**parrot** - [pic](https://unsplash.com/photos/scarlet-macaw-porches-on-tree-branch-3osGqRRtQBE)
 - [] creature-**flamingo** - [pic](https://unsplash.com/photos/flamingo-2lKjBwKwAF8)
+- [] creature-**Swift** - [pic](https://images.unsplash.com/photo-1624384807192-6517858ba33c?q=80&w=3087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D) - [taken by woodpecker](https://github.com/apply-creatures/creature-swift)
 

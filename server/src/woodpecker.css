@@ -1,0 +1,10 @@
+:root {
+    --background-color: #323635;
+    --background-gradient-color: #243b55;
+    --wp-background-100: transparent;
+    --wp-primary-300: transparent;
+}
+
+body {
+    background: linear-gradient(var(--background-color), var(--background-gradient-color));
+}
