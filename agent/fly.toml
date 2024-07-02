@@ -19,3 +19,4 @@ primary_region = 'waw'
 
 [[vm]]
   size = 'shared-cpu-1x'
+  memory = "512mb"
