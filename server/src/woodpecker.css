@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css2?family=Anonymous+Pro:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+:root {
+    --background-color: #323635;
+    --background-gradient-color: #243b55;
+
+    --wp-background-100: #323635 !important;
+    --wp-background-200: #2a2d2d !important;
+    --wp-background-300: #1f2121 !important;
+    --wp-background-400: #1e2121 !important;
+    --wp-text-100: #bebebe !important;
+    --wp-text-200: #bccdc9 !important;
+    --wp-text-alt-100: #a0a0a0 !important;
+    --wp-primary-100: #ddd !important;
+    --wp-primary-200: #bccdc9 !important;
+    --wp-primary-300: #333 !important;
+    --wp-primary-text-100: #ddd !important;
+    --wp-control-neutral-100: #323635 !important;
+    --wp-control-neutral-200: #272a29 !important;
+    --wp-control-neutral-300: #1e2121v
+    --wp-control-info-100: #007bff !important;
+    --wp-control-info-200: #0056b3 !important;
+    --wp-control-info-300: #004080 !important;
+    --wp-control-ok-100: #004131 !important;
+    --wp-control-ok-200: #003824 !important;
+    --wp-control-ok-300: #002c1a !important;
+    --wp-control-error-100: #8a2e2e !important;
+    --wp-control-error-200: #742727 !important;
+    --wp-control-error-300: #602222 !important;
+    --wp-state-error-100: #8a2e2e !important;
+    --wp-state-neutral-100: #3c4655 !important;
+    --wp-state-ok-100: #004131 !important;
+    --wp-state-info-100: #007bff !important;
+    --wp-state-warn-100: #c49d21 !important;
+    --wp-hint-warn-100: #b5a673 !important;
+    --wp-hint-warn-200: #8e7446 !important;
+    --wp-code-100: #1e2121 !important;
+    --wp-code-200: #1a1d26 !important;
+    --wp-code-text-100: #bccdc9 !important;
+    --wp-code-text-alt-100: #a0a0a0 !important;
+    --wp-link-100: #007bff !important;
+    --wp-link-200: #0056b3 !important;
+}
+
+html {
+    font-family: "Anonymous Pro", monospace;
+}
+
+body {
+    background: linear-gradient(var(--background-color), var(--background-gradient-color));
+}
+
+nav.flex.bg-wp-primary-200.dark\:bg-wp-primary-300.text-neutral-content.p-4.border-b.border-wp-background-100.font-bold.text-wp-primary-text-100 {
+    background-image: url(https://github.com/Apply-Creatures/.github/raw/main/assets/feathers-cubic-square.png);
+    object-fit: cover;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position-x: 0.825rem;
+}
+
+a.flex.flex-col.-my-2.px-2[href="/"] {
+    opacity: 0;
+}

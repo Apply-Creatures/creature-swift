@@ -1,0 +1,27 @@
+app = 'creature-swift'
+primary_region = 'waw'
+
+[build]
+  dockerfile = './Dockerfile'
+
+[[mounts]]
+  source = 'woodpecker_data'
+  destination = '/var/lib/woodpecker/'
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[services]]
+  internal_port = 9000
+  protocol = "tcp"
+
+  [[services.ports]]
+    port = "9000"
+
+[[vm]]
+  size = 'shared-cpu-1x'

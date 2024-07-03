@@ -15,18 +15,18 @@
   <h3 align="center">README</h3>
 
    <a href="#">
-      <img src="images/orgname-logo.png" alt="screenshot" width="30%">
+      <img src="images/logo.png" alt="screenshot" width="30%">
    </a>
 
   <p align="center">
-    Some thing
+    <strong>SWift</strong> - Continuous Integration and Delivery
     <br />
-    <a href="#"><strong>See live (soon) »</strong></a>
+    <a href="https://ci.applycreatures.com"><strong>See live »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/orgname/appname/issues">Report Bug</a>
+    <a href="https://github.com/apply-creatures/creature-swift/issues">Report Bug</a>
     ::
-    <a href="https://github.com/orgname/appname/issues">Request Feature</a>
+    <a href="https://github.com/apply-creatures/creature-swift/issues">Request Feature</a>
   </p>
 </div>
 
@@ -74,19 +74,22 @@ OK, DOkey
 
 ## About
 
-Dragons spit fire but hold plenty of gold.
+CircleCI, Github Action? Drone (gone now core open source), what else, harness (it's drone core plus stuff), what about Jenkins? long time made core.
+
+CI (and CD) is just that thing that keeps dissapoint, either with the cost or with the rigidity.
+Well here is a container, it a server to see jobs, and an agent that can do custom stuff
 
 <div align="center">
    <a href="#">
-      <img src="images/orgname-logo.png" alt="screenshot" width="60%">
+      <img src="images/common-swift.jpg" alt="screenshot" width="60%">
    </a>
 </div>
 
 ## Features
 
-* Long tail
-* Short tail
-* 
+* Support for simple and complex modeling
+* Visualizer and traceability
+* Plugins support, can do all you want
 
 
 Of course, nothing is perfect, but I will try to keep this up to date and fix issues right here.
@@ -96,13 +99,12 @@ If you've truly tried everything and still can't get this to work for you, try t
 
 ### Built With
 
-- [node.js](https://nodejs.org/) - of course
-- [someotherthing](https://perdu.com/) - never did before, I almost used another one, but it seems solid
+- [Woodpecker](https://woodpecker-ci.org/) - good bye GH actions, CircleCI, even harness finds ways to displease
 - 
 
 ### Also using
 
-- 
+- [Docker](https://www.docker.com/) - like most stuff in there
 
 
 <hr/>
@@ -114,45 +116,118 @@ If you've truly tried everything and still can't get this to work for you, try t
 ### Prerequisites
 
 - you need [Git](https://git-scm.com/) installed
-- and [nodejs](https://nodejs.org/) of course
-
+- and [docker](https://www.docker.com/) for doing stuff
 
 ### Set up repo
 
 ```bash
-$ git clone https://github.com/orgname/appname.git
+$ git clone https://github.com/apply-creatures/creature-swift.git
 ```
 
 Navigate to the repo root's folder & install dependencies
 
 ```bash
-$ cd ./appname && npm install
+$ cd ./creature-swift
 ```
 
-### Develop
+### Build and run locally
 
-**Launch in develop mode**
+0. Configurations
+
+You may want to take a peek at the env variable, you may override some but they should work as is
+Can't guess your github org client/id and secret (necessary for oauth integration)
+
+sets some env variable as such:
 
 ```bash
-$ npm run develop # code changes will automatically reload the server
+ENV WOODPECKER_GITHUB_CLIENT=clientid
+ENV WOODPECKER_GITHUB_SECRET=secret
 ```
 
-**Access via browser**
+1. Build the server
 
-- Hit [http://localhost:3030](http://localhost:3030)
+Navigate to the [server](./server/) folder and you would want to edit the  ENVVAR for local
 
-### Build
-
-This command will compile for production deployment:
+then run this command to build a local container image for the server:
 
 ```bash
-$ npm run compile
+$ docker build -t creatures-swift:latest .   # better use a tag!
 ```
 
+3. Run the server
+
+```bash
+# this tells docker to start that container interactively and make use of a specific volume for data
+# and binds the port 8000 to 8000
+$ docker run -p 8000:8000 --mount source=my-vol1,target=/var/lib/woodpecker/ creature-swift:latest
+```
+
+4. Access via browser**
+
+- Hit [http://localhost:8000](http://localhost:8000)
+
+You can then generate an agent API key. Keep that as we will need it for the agent.
+
+5. Build the agent
+
+Navigate to the [agent](./agent/) folder.
+Add the var:
+
+```ENV WOODPECKER_AGENT_SECRET=thattokenkeyfromserver``` to the agent's Dockerfile
+
+
+```bash
+$ docker build -t creatures-swift-agent:latest .   # better use a tag!
+```
+
+6. Run the agent
+
+```bash
+$ docker run -p 3000:3000 creature-swift:latest
+```
+
+If all goes well the agent will pick up jobs by itself.
 
 ### Deploy
 
-how to deploy here
+**First time**
+
+1. Launch Server
+```bash
+$ fly launch
+```
+
+2. Set the secrets
+set those secrets, they are the github org app that gets authorize to access repos:
+
+```bash
+$ fly secrets set WOODPECKER_GITHUB_CLIENT=thecliendid
+$ fly secrets set WOODPECKER_GITHUB_SECRET=thesecret
+```
+
+3. Create volume
+
+```bash
+# this creates a volume called woodpecker in region waw (Kraków)
+$ fly volumes create woodpecker_data -r waw 
+```
+
+4. Generate a certificate
+
+```bash
+$ fly certs add ci.example.com # of course just an example
+# and you can then add the appname.fly.dev as CNAME DNS entry in your DNS holder
+```
+
+**Subsequent deployments**
+
+Just 
+
+```bash
+$ fly deploy
+```
+
+The agent TODO: It's about the same steps, review settings that are env specific, keep sensitive things secrets.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -161,9 +236,11 @@ how to deploy here
 
 ## Roadmap
 
-- [x] Setup a repo with ...
-- [x] Setup ...
-- [ ] And ...
+- [x] Setup a repo with the what and instructions
+- [x] Validate the container
+- [x] Get the server deployed and picking up some git repo triggers
+- [x] Agents
+- [x] Complement agent container to set up fly cli
 
 <hr/>
 
@@ -193,23 +270,23 @@ It would never end. I've done this work not just off dozens of other people's op
 
 <!-- Refs -->
 
-[codacy-url]: https://app.codacy.com/gh/orgname/appname/dashboard
+[codacy-url]: https://app.codacy.com/gh/apply-creatures/creature-swift/dashboard
 [codacy-shield]: https://img.shields.io/codacy/grade/appid?style=for-the-badge
-[contributors-shield]: https://img.shields.io/github/contributors/orgname/appname.svg?style=for-the-badge
-[contributors-url]: https://github.com/orgname/appname/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/orgname/appname.svg?style=for-the-badge
-[forks-url]: https://github.com/orgname/appname/network/members
-[stars-shield]: https://img.shields.io/github/stars/orgname/appname.svg?style=for-the-badge
-[stars-url]: https://github.com/orgname/appname/stargazers
-[issues-shield]: https://img.shields.io/github/issues/orgname/appname.svg?style=for-the-badge
-[issues-url]: https://github.com/orgname/appname/issues
-[license-shield]: https://img.shields.io/github/license/orgname/appname.svg?style=for-the-badge
-[license-url]: https://github.com/orgname/appname/blob/main/LICENSE
-[score-shield]: https://img.shields.io/ossf-scorecard/github.com/orgname/appname?style=for-the-badge
-[score-url]: https://github.com/orgname/appname
-[repo-size-shield]: https://img.shields.io/github/repo-size/orgname/appname?style=for-the-badge
-[repo-size-url]: https://github.com/orgname/appname/archive/refs/heads/main.zip
-[product-screenshot]: images/orgname-logo.png
+[contributors-shield]: https://img.shields.io/github/contributors/apply-creatures/creature-swift.svg?style=for-the-badge
+[contributors-url]: https://github.com/apply-creatures/creature-swift/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/apply-creatures/creature-swift.svg?style=for-the-badge
+[forks-url]: https://github.com/apply-creatures/creature-swift/network/members
+[stars-shield]: https://img.shields.io/github/stars/apply-creatures/creature-swift.svg?style=for-the-badge
+[stars-url]: https://github.com/apply-creatures/creature-swift/stargazers
+[issues-shield]: https://img.shields.io/github/issues/apply-creatures/creature-swift.svg?style=for-the-badge
+[issues-url]: https://github.com/apply-creatures/creature-swift/issues
+[license-shield]: https://img.shields.io/github/license/apply-creatures/creature-swift.svg?style=for-the-badge
+[license-url]: https://github.com/apply-creatures/creature-swift/blob/main/licenses/ApacheV2.txt
+[score-shield]: https://img.shields.io/ossf-scorecard/github.com/apply-creatures/creature-swift?style=for-the-badge
+[score-url]: https://github.com/apply-creatures/creature-swift
+[repo-size-shield]: https://img.shields.io/github/repo-size/apply-creatures/creature-swift?style=for-the-badge
+[repo-size-url]: https://github.com/apply-creatures/creature-swift/archive/refs/heads/main.zip
+[product-screenshot]: images/apply-creatures-logo.png
 
 ## Changelog
 
@@ -223,26 +300,205 @@ Changelog see [here](CHANGELOG.md)
 If you too produce work and publish it out there, it's clearer to choose a [license](https://choosealicense.com).
 
 ```markdown
-MIT License
+                               Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
 
-Copyright (c) 2024 Hirako
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+   1. Definitions.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+      "License" shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
+      "Licensor" shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      "Legal Entity" shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      "control" means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      "You" (or "Your") shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      "Source" form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      "Object" form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      "Work" shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      "Derivative Works" shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      "Contribution" shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, "submitted"
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as "Not a Contribution."
+
+      "Contributor" shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a "NOTICE" text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets "[]"
+      replaced with your own identifying information. (Don't include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same "printed page" as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright [yyyy] [name of copyright owner]
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
 ```
