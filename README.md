@@ -21,7 +21,7 @@
   <p align="center">
     <strong>SWift</strong> - Continuous Integration and Delivery
     <br />
-    <a href="#"><strong>See live (maybe somewhere) »</strong></a>
+    <a href="https://ci.applycreatures.com"><strong>See live »</strong></a>
     <br />
     <br />
     <a href="https://github.com/apply-creatures/creature-swift/issues">Report Bug</a>
