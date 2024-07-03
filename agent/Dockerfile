@@ -9,7 +9,7 @@ ENV WOODPECKER_MAX_WORKFLOWS=1
 
 ENV WOODPECKER_BACKEND=local
 
-RUN apk add --no-cache git git-lfs bash curl nodejs gcompat wget ca-certificates
+RUN apk add --no-cache git git-lfs bash curl nodejs npm gcompat wget ca-certificates
 
 RUN mkdir -p /tmp
 RUN chmod 1777 /tmp
