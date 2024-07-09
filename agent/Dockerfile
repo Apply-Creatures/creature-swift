@@ -23,7 +23,7 @@ RUN chmod -R 755 /root/.bun
 RUN curl -L https://fly.io/install.sh | sh
 
 RUN export PATH=${PATH}:$(ls -d /tmp/woodpecker-local-*/home/.fly)
-ENV PATH=${PATH}:/root/.bun/bin
+ENV PATH=${PATH}:/root/.bun/bin:/root/.fly/bin
 
 # https://github.com/oven-sh/bun/issues/5545
 # Install glibc to run Bun
@@ -42,5 +42,7 @@ RUN if [[ $(uname -m) == "aarch64" ]] ; \
 
 
 EXPOSE 3000
+
+USER root
 
 ENTRYPOINT ["/bin/woodpecker-agent"]
